@@ -40,4 +40,17 @@
 
 		return $memberCnt;
 	}
+
+	// 2차 이벤트 참여여부 체크(phone)
+	function BC2_memberChk($phone)
+	{
+		global $_gl;
+		global $my_db;
+
+		$query			= "SELECT * FROM ".$_gl['member_info2_table']." WHERE mb_phone='".$phone."'";
+		$result			= mysqli_query($my_db, $query);
+		$memberCnt	= mysqli_num_rows($result);
+
+		return $memberCnt;
+	}
 ?>

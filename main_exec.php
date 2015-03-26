@@ -80,7 +80,31 @@ switch ($_REQUEST['exec'])
 		echo $query;
 	break;
 
+	case "insert_event2" :
+		$mb_name		= $_REQUEST['mb_name'];
+		$mb_phone1	= $_REQUEST['mb_phone1'];
+		$mb_phone2	= $_REQUEST['mb_phone2'];
+		$mb_phone3	= $_REQUEST['mb_phone3'];
+		$mb_addr		= $_REQUEST['mb_addr'];
+		$mb_phone = $mb_phone1."-".$mb_phone2."-".$mb_phone3;
 
+		$chk_member	= BC2_memberChk($mb_phone);
+
+		if ($chk_member == 0)
+		{
+			$query 		= "INSERT INTO ".$_gl['member_info2_table']."(mb_ipaddr, mb_phone, mb_name, mb_addr, mb_regdate, mb_gubun) values('".$_SERVER['REMOTE_ADDR']."','".$mb_phone."','".$mb_name."','".$mb_addr."','".date("Y-m-d H:i:s")."','".$gubun."')";
+			$result 	= mysqli_query($my_db, $query);
+
+			if ($result)
+				$flag = "Y";
+			else
+				$flag = "N";
+		}else{
+			$flag = "D";
+		}
+
+		echo $flag;
+	break;
 }
 
 ?>

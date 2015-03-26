@@ -91,40 +91,6 @@ function sns_share(media)
 	}
 
 }
-function auto_play()
-{
-	$("#cover_image").hide();
-	controllable_player.seekTo(0);
-	controllable_player.playVideo(); 
-}
-
-// 메뉴 이동
-function goPosition(to){
-	scrollReady = false;
-	$("html, body").stop().animate(
-		{scrollTop: to},
-		500,
-		'easeOutExpo',
-		function(){scrollReady = true;}
-	);
-}
-
-//참가하기
-function event_join()
-{
-	$("#input_div").show();
-}
-
-function inputfrm_data()
-{
-	$.magnificPopup.open({
-		items: {
-			src: '#input_div'
-		},
-		type: 'inline',
-		showCloseBtn : false
-	}, 0);
-}
 
 function m_chk_input()
 {
@@ -225,76 +191,105 @@ function m_chk_input()
 			}
 		}
 	});
-
 }
 
-function open_event()
+function chk_input()
 {
-	$("#input_div").show();
-	$("#gift_div").hide();
-}
+	var mb_name	= $('#mb_name').val();
+	var mb_phone1	= $('#mb_phone1').val();
+	var mb_phone2	= $('#mb_phone2').val();
+	var mb_phone3	= $('#mb_phone3').val();
+	var mb_addr		= $('#mb_addr').val();
 
-function open_use()
-{
-	$("#use_div").show();
-}
+	if (mb_name == "")
+	{
 
-function open_privacy()
-{
-	$("#privacy_div").show();
-}
+		alert('개인정보 입력을 안 하셨습니다');
+		//setTimeout("ins_data();",500);
 
-function open_adver()
-{
-	$("#adver_div").show();
-}
+		$("#mb_name").focus();
+		//$("#input_alert").show();
+		return false;
+	}
 
-function open_gift()
-{
-	$("#gift_div").show();
-	$("#input_div").hide();
-}
+	if (mb_phone2 == "" || mb_phone2.length <3)
+	{
+		alert('개인정보 입력을 안 하셨습니다');
+		//setTimeout("ins_data();",500);
+		$("#mb_phone2").focus();
+		return false;
+	}
+	
 
-function close_input()
-{
-	//$("#input_div").hide();
-	$("#mb_name").val("");
-	$("#mb_phone1").val("010");
-	$("#mb_phone2").val("");
-	$("#mb_phone3").val("");
-	$("#addr1").val("");
-	$("#addr2").val("");
-	$("#shop").val("");
-	$('input').iCheck('uncheck');
-	$.magnificPopup.close();
-}
+	if (mb_phone3 == "" || mb_phone3.length<4)
+	{
+		alert('개인정보 입력을 안 하셨습니다');
+		//setTimeout("ins_data();",500);
+		$("#mb_phone3").focus();
+		return false;
+	}
 
-function close_movie()
-{
-	$.magnificPopup.close();
-}
+	if (mb_addr == "")
+	{
+		alert('주소 입력을 안하셨습니다.');
+		//setTimeout("ins_data();",500);
+		$("#mb_addr").focus();
+		return false;
+	}
 
-function close_ok()
-{
-	//$("#input_div").hide();
-	$.magnificPopup.close();
-	close_input();
-}
+	if ($('#use_agree').is(":checked") == false)
+	{
+		alert("개인정보 활용 동의를 안 하셨습니다");
+		//setTimeout("agree_data();",500);
+		return false;
+	}
 
-function close_gift()
-{
-	//$("#gift_div").hide();
-	$.magnificPopup.close();
-}
+	if ($('#privacy_agree').is(":checked") == false)
+	{
+		alert("개인정보 활용 동의를 안 하셨습니다");
+		//setTimeout("agree_data();",500);
+		return false;
+	}
 
-function close_map()
-{
-	$("#map_div").hide();
-}
+	if ($('#adver_agree').is(":checked") == false)
+	{
+		alert("개인정보 활용 동의를 안 하셨습니다");
+		//setTimeout("agree_data();",500);
+		return false;
+	}
 
-function close_look()
-{
-	$("#look_div").hide();
+	$.ajax({
+		type:"POST",
+		data:{
+			"exec"				: "insert_event2",
+			"mb_name"			: mb_name,
+			"mb_phone1"		    : mb_phone1,
+			"mb_phone2"		    : mb_phone2,
+			"mb_phone3"		    : mb_phone3,
+			"mb_addr"				: mb_addr
+		},
+		url: "../main_exec.php",
+		success: function(response){
+			if (response == "Y")
+			{
+				alert("참여해주셔서 감사합니다.");
+				$.magnificPopup.close();
+
+				//setTimeout("ok_data();",1000);
+
+			}
+			else if (response == "D")
+			{
+				alert("이미 이벤트에 응모하셨습니다.\n다음에 다시 참여해 주세요.");
+				$.magnificPopup.close();
+			}
+			else
+			{
+				alert("이벤트 참여자 수가 많아 참여가 지연되고 있습니다.\n다시 응모해 주시기 바랍니다.");
+				$.magnificPopup.close();
+			}
+		}
+	});
 }
 
 function chk_radio(){
